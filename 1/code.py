@@ -15,3 +15,5 @@ for line in f:
     number = getLineNumber(line) + getLineNumber(line[::-1])
     sum += int(number)
 print(sum)
+
+# this comment is to prove a point
