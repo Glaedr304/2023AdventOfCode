@@ -28,8 +28,6 @@ for x in textNumbers.keys():
         # print(x)
         wordString += "|"
 
-# print(wordString)
-
 f = open(input, "r")
 
 def getLineNumber(line):
