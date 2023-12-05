@@ -29,9 +29,8 @@ for line in f:
         else:
             color = result
             line = line.replace(color, "", 1).strip()
-            if blocks > possible[color]:
-                game = 0
-                break
+            if blocks > currentMax[color]:
+                currentMax[color] = blocks
 
-    sum += int(game)
+    sum += currentMax["red"]*currentMax["green"]*currentMax["blue"]
 print(sum)
