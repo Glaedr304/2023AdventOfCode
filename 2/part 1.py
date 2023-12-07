@@ -19,14 +19,6 @@ def nextSpace( String ):
     elif finder <= 0:
         return String
 
-
-
-
-
-
-
-
-
 for line in f:
     print("Line: ", line)
     game = line[line.find(" ") + 1:line.find(":")]
