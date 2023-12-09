@@ -18,25 +18,26 @@ winners = 0
 
 def determineWinCount(card):
     winCount = 0
-    print(Cards[card][0], Cards[card][1])
     for winner in Cards[card][0]:
         if winner in Cards[card][1]:
             winCount += 1
-    print(card, winCount)
     return winCount
 
-def loopThemCards(startCard):
+def loopThemCards(startCard, loopDepth):
     cards = 1
     count = determineWinCount(startCard)
-    if count > 0:
-        for i in range(startCard + 1, startCard + count):
-            cards += loopThemCards(i)
+    if count == 1:
+        cards += loopThemCards(startCard + 1, loopDepth + 1)
+    if count > 1:
+        for i in range(startCard + 1, startCard + 1 + count):
+            cards += loopThemCards(i, loopDepth + 1)
     return cards
 
-output = loopThemCards(1)
+for i in range(1, list(Cards.keys())[-1] + 1):
+    output += loopThemCards(i, 0)
+
+for i in range(3, 4):
+    print(i)
 
 
 print("Output: ", output)
-
-# 12973 too low
-# 19460 too low
