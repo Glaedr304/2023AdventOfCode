@@ -1,3 +1,4 @@
+import datetime
 input = "input.txt"
 
 output = 0
@@ -33,11 +34,12 @@ def loopThemCards(startCard, loopDepth):
             cards += loopThemCards(i, loopDepth + 1)
     return cards
 
+
+start = datetime.datetime.now()
 for i in range(1, list(Cards.keys())[-1] + 1):
     output += loopThemCards(i, 0)
-
-for i in range(3, 4):
-    print(i)
+end = datetime.datetime.now() - start
 
 
+print("Time: ", end)
 print("Output: ", output)
