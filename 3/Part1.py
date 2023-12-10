@@ -11,33 +11,33 @@ AllCharacters = set() # readying the set
 Numbers = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
 NotCharacters = Numbers.union({".", "\n"})
 
-Characters = set() # AllCharacters - NotCharacters
+Symbols = set() # AllCharacters - NotCharacters
 
 lines = list() # to be later converted to a touple
 
 for line in f:
-    characters = tuple()
+    lineCharacters = tuple()
     for character in line:
-        characters += tuple(character)
+        lineCharacters += tuple(character)
         if character in AllCharacters:
             pass
         else:
             AllCharacters.add(character)
     # print("characters: ", characters)
-    lines.append(characters)
+    lines.append(lineCharacters)
 lines = tuple(lines)
 # print("Lines:")
 # print(lines)
 arr = np.transpose(np.array(lines))
 # arr = np.delete(arr, arr.shape[1], 0)
 
-Characters = AllCharacters
+Symbols = AllCharacters
 for character in NotCharacters:
     try:
-         Characters.remove(character)
+         Symbols.remove(character)
     except:
         pass
-# print("Characters: ", Characters)
+# print("Symbols: ", Symbols)
 
 # print("Line: ", lines[0][1], lines[0][2], lines[0][3])
 
@@ -57,6 +57,7 @@ def checkAroundNumber(x, y, numLength):
     xmax = x + numLength + 1
     ymin = y - 1
     ymax = y + 1
+
     print("xmax - xmin", xmax - xmin)
     print("ymax - ymin", ymax - ymin)
     print("x,y", x, y, "xmin", xmin, "xmax", xmax, "ymin", ymin, "ymax", ymax)
@@ -69,10 +70,10 @@ def checkAroundNumber(x, y, numLength):
     if ymax >= arr.shape[1]:
         ymax -= 1
 
-    for y2 in range(ymin, ymax+1):
+    for y2 in range(ymin, ymax + 1):
         for x2 in range(xmin, xmax):
             print(x2, y2, arr[x2][y2], end=" ")
-            if str(arr[x2][y2]) in Characters:
+            if str(arr[x2][y2]) in Symbols:
                 return True
             # print(x2, y2, arr[x2][y2])
         print("")
