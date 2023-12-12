@@ -17,10 +17,7 @@ while '' in data:
 rawSeeds = eval( "(" + data.pop(0).replace("seeds: ", "").replace(" ", ",") + ")")
 seedRanges = set()
 for x in range(int(len(rawSeeds)/2)):
-    seedRanges.add("range(" + str(rawSeeds[2*x])+ ", " + str(rawSeeds[2*x] + rawSeeds[2*x + 1]) + ")")
-
-for range1 in seedRanges:
-    print(range1)
+    seedRanges.add(eval("range(" + str(rawSeeds[2*x])+ ", " + str(rawSeeds[2*x] + rawSeeds[2*x + 1]) + ")"))
 
 maps = dict()
 thisKey = -1
@@ -31,27 +28,35 @@ for row in data:
     if row[0].isnumeric():
         maps[thisKey].append(eval("(" + row.replace(" ", ",") + ")"))
 
-smallestTransformedSeed = 9999999999999999999999999999999
 upperBound = 331445006 # Solution to part 1
 
 start = datetime.datetime.now()
 
-for seeds in seedRanges:
-    for seed in eval(seeds):
-        for map in maps.keys():
-            for route in maps[map]:
-                source = route[1]
-                destination = route[0]
-                numberRange = route[2]
-                formalRange = range(source, source + numberRange)
-                if seed in formalRange:
-                    offset = seed - source
-                    seed = destination + offset
+for outputNumber in range(0, upperBound):
+    originalOutput = outputNumber
+    for map in list(maps.keys())[::-1]:
+        for route in maps[map]:
+            source = route[1]
+            destination = route[0]
+            numberRange = route[2]
+            formalRange = range(destination, destination + numberRange)
+            if outputNumber in formalRange:
+                offset = outputNumber - destination
+                outputNumber = source + offset
+                break
+        if map == 0:
+            for seedRange in seedRanges:
+                if outputNumber in seedRange:
+                    print("originalOutput:", originalOutput)
+                    print("outputNumber:", outputNumber)
+                    output = originalOutput
                     break
-        if seed < upperBound:
-            smallestTransformedSeed = seed
-
-output = smallestTransformedSeed
+            else:
+                continue
+            break
+    else:
+        continue
+    break
 
 o = open("output.txt", "a")
 o.write(str(output))
@@ -62,7 +67,3 @@ end = datetime.datetime.now() - start
 print("Time: ", end)
 
 print("Output: ", output)
-
-# 51359249 too low
-# 331445006
-# 239755573 too high
