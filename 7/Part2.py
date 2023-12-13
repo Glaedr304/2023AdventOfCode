@@ -1,5 +1,5 @@
 import datetime
-from pprint import pprint
+
 input = "input.txt"
 
 camelCards = { "J":"00",
@@ -41,8 +41,23 @@ for listItem in hands:
             listItem[thisHand][char] += 1
         else:
             listItem[thisHand][char] = 1
-    # TODO add code for removing J and adding it to the largest other card here
-pprint(hands)
+    try:
+        wildcardCount = listItem[thisHand].pop("J")
+
+        if len(listItem[thisHand]) == 0:
+            listItem[thisHand]["J"] = 5
+            raise
+    except:
+        continue
+    else:
+        highestCard = ""
+        highestCardCount = 0
+        for cardKey in listItem[thisHand].keys():
+            if listItem[thisHand][cardKey] > highestCardCount:
+                highestCard = cardKey
+                highestCardCount = listItem[thisHand][cardKey]
+        listItem[thisHand][highestCard] += wildcardCount
+
 
 def sortingKey(hand):
     key = "0"
@@ -64,7 +79,6 @@ def sortingKey(hand):
 start = datetime.datetime.now()
 
 hands.sort(key = sortingKey)
-  
 
 for handNumber in range(len(hands)):
     output += (handNumber + 1)*hands[handNumber]["bid"]
@@ -73,3 +87,5 @@ end = datetime.datetime.now() - start
 print("Time: ", end)
 
 print("Output: ", output)
+
+# 246894760 too high but entered into day 8, not day 7
