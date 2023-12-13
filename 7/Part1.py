@@ -2,8 +2,27 @@ import datetime
 from pprint import pprint
 input = "input.txt"
 
-camelCards = ("2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A")
-winningHands = ("11111", "2111", "221", "311", "32", "41", "5")
+camelCards = { "2":"00",
+               "3":"01",
+               "4":"02",
+               "5":"03",
+               "6":"04",
+               "7":"05",
+               "8":"06",
+               "9":"07",
+               "T":"08",
+               "J":"09",
+               "Q":"10",
+               "K":"11",
+               "A":"12"}
+
+winningHands = {"11111":"1",
+                "2111":"2",
+                "221":"3",
+                "311":"4",
+                "32":"5",
+                "41":"6",
+                "5":"7"}
 
 f = open(input, "r")
 
@@ -12,7 +31,7 @@ output = 0
 hands = list()
 
 for line in f:
-    hands.append({str(line[:line.find(" ")]): None, "bid": int(line[line.find(" ") + 1:line.find("\n")])})
+    hands.append({str(line[:line.find(" ")]): None, "bid": int(line[line.find(" "):].strip())})
 
 for listItem in hands:
     thisHand = list(listItem.keys())[0]
@@ -24,9 +43,30 @@ for listItem in hands:
             listItem[thisHand][char] = 1
 pprint(hands)
 
+def sortingKey(hand):
+    key = "0"
+    handCards = list(hand.keys())[0]
+
+    sortedHand = sorted(list(hand[handCards].values()), reverse=True)
+    
+    sortedHandString = ""
+    for num in sortedHand:
+        sortedHandString += str(num)
+
+    key = winningHands[sortedHandString]
+
+    for char in handCards:
+        key += camelCards[char]
+
+    return int(key)
+
 start = datetime.datetime.now()
 
+hands.sort(key = sortingKey)
+  
 
+for handNumber in range(len(hands)):
+    output += (handNumber + 1)*hands[handNumber]["bid"]
 
 end = datetime.datetime.now() - start
 print("Time: ", end)
