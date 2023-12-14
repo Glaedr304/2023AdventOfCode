@@ -37,12 +37,19 @@ def TestZs(places):
         return False
     return True
 
+animation = "|/-\\"
+
 start = datetime.datetime.now()
 
 steps = 0
+idx = 0
 
 while TestZs(WhereIAm):
+    if str(steps)[-1] == "0":
+        print(animation[idx % len(animation)], end="\r")
+        idx += 1
     for index in Directions:
+        # print(index, WhereIAm)
         for node in range(len(WhereIAm)):
             WhereIAm[node] = Navigate(WhereIAm[node], int(index))
         steps += 1
