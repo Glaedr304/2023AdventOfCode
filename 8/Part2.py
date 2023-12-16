@@ -1,13 +1,13 @@
 import datetime
+from math import lcm
 
-input = "input.txt"
+inputFile = "input.txt"
 
-f = open(input, "r")
+f = open(inputFile, "r")
 
 output = 0
 
 Directions = f.readline().replace("L", "0").replace("R", "1").strip()
-print("Directions Length:", len(Directions))
 
 f.readline()
 
@@ -23,45 +23,27 @@ for line in f:
     if node[-1] == 'A':
         Start.append(node)
 
-WhereIAm = Start
-print("Where I Start", WhereIAm)
-
 def Navigate(place, dir):
     return Map[place][dir]
 
-def TestZs(places):
-    for node in places:
-        if node[-1] != 'Z':
-            break
-    else:
-        return False
-    return True
+def getSteps(myLocation):
+    steps = 0
+    while myLocation[-1] != "Z":
+        for index in Directions:
+            myLocation = Navigate(myLocation, int(index))
+            steps +=1
+    return steps
 
-animation = "|/-\\"
+stepsToEachZ = list()
 
 start = datetime.datetime.now()
 
-steps = 0
-idx = 0
+for startLine in range(len(Start)):
+    stepsToEachZ.append(getSteps(Start[startLine]))
 
-while TestZs(WhereIAm):
-    if str(steps)[-1] == "0":
-        print(animation[idx % len(animation)], end="\r")
-        idx += 1
-    for index in Directions:
-        # print(index, WhereIAm)
-        for node in range(len(WhereIAm)):
-            WhereIAm[node] = Navigate(WhereIAm[node], int(index))
-        steps += 1
-
-print("Where I am:", WhereIAm)
-output = steps
+output = lcm(stepsToEachZ[0], stepsToEachZ[1], stepsToEachZ[2], stepsToEachZ[3], stepsToEachZ[4], stepsToEachZ[5])
 
 end = datetime.datetime.now() - start
-
-o = open("output.txt", "a")
-o.write(str(output))
-o.close()
 
 print("Time: ", end)
 
