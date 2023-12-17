@@ -55,3 +55,6 @@ print("Time: ", end)
 
 print("Output: ", output)
 
+# -21166
+# 21166 too high
+# 1062
