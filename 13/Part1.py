@@ -40,6 +40,11 @@ for pattern in input:
         "rowIndexes": findDuplicates(arr) 
         }
     print(patternDict)
+    if len(patternDict["columnIndexes"]) + len(patternDict["rowIndexes"]) == 1:
+        # find the index, add it to the output and continue
+        continue
+
+    validateMirror(pattern, 1)
 
 
 end = datetime.datetime.now() - start
