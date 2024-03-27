@@ -20,10 +20,14 @@ def findDuplicates(arr):
             matchesList.append(rowIndex)
     return matchesList
 
-def validateMirror(arr, index) -> bool:
+def validateMirror(arr, index, spacing) -> bool:
     minIndex = 0
-    maxIndex = len(arr)
-    print(arr)
+    maxIndex = len(arr) - 1
+    if (index - 1) < minIndex or (index + spacing) > maxIndex: 
+        return True
+    if "".join(arr[index - 1]) != "".join(arr[index + spacing]):
+        return False
+    return validateMirror(arr, index - 1, spacing + 2)
 
 start = datetime.datetime.now()
 
@@ -45,16 +49,14 @@ for pattern in input:
 
     if len(patternDict["columnIndexes"]) > 0:
         for colIndex in patternDict["columnIndexes"]:
-            isMirror = validateMirror(np.transpose(arr), colIndex)
-            print(patternDict)
+            isMirror = validateMirror(np.transpose(arr), colIndex, 2)
             if isMirror == True: 
                 output += colIndex + 1
                 break
 
     if (len(patternDict["rowIndexes"]) > 0) and (isMirror != True):
         for rowIndex in patternDict["rowIndexes"]:
-            isMirror = validateMirror(arr, rowIndex)
-            print(patternDict)
+            isMirror = validateMirror(arr, rowIndex, 2)
             if isMirror == True: 
                 output += 100*(rowIndex + 1)
                 break
