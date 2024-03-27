@@ -15,21 +15,15 @@ output = 0
 
 def findDuplicates(arr):
     matchesList = list()
-    # print(arr[0])
     for rowIndex in range(len(arr) - 1):
-        # print(arr[rowIndex + 1])
         if "".join(arr[rowIndex]) == "".join(arr[rowIndex + 1]):
-            # print(rowIndex)
             matchesList.append(rowIndex)
-            # return rowIndex
-    # if matchesList == list():
-    #     # print("No Matches")
-    #     return None
-    # print(matchesList)
     return matchesList
 
-def validateMirror(arr, index):
-    pass
+def validateMirror(arr, index) -> bool:
+    minIndex = 0
+    maxIndex = len(arr)
+    print(arr)
 
 start = datetime.datetime.now()
 
@@ -39,12 +33,31 @@ for pattern in input:
         "columnIndexes": findDuplicates(np.transpose(arr)),
         "rowIndexes": findDuplicates(arr) 
         }
-    print(patternDict)
     if len(patternDict["columnIndexes"]) + len(patternDict["rowIndexes"]) == 1:
         # find the index, add it to the output and continue
+        if patternDict["columnIndexes"] != []: 
+            output += patternDict["columnIndexes"][0] + 1
+        else:
+            output += 100*(patternDict["rowIndexes"][0] + 1)
         continue
+    
+    isMirror = False
 
-    validateMirror(pattern, 1)
+    if len(patternDict["columnIndexes"]) > 0:
+        for colIndex in patternDict["columnIndexes"]:
+            isMirror = validateMirror(np.transpose(arr), colIndex)
+            print(patternDict)
+            if isMirror == True: 
+                output += colIndex + 1
+                break
+
+    if (len(patternDict["rowIndexes"]) > 0) and (isMirror != True):
+        for rowIndex in patternDict["rowIndexes"]:
+            isMirror = validateMirror(arr, rowIndex)
+            print(patternDict)
+            if isMirror == True: 
+                output += 100*(rowIndex + 1)
+                break
 
 
 end = datetime.datetime.now() - start
