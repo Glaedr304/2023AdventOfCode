@@ -13,21 +13,26 @@ for puzzleIndex in range(len(input)):
 
 output = 0
 
-def findDuplicates(arr):
+def findDuplicates(arr, acceptableErrors): # I believe I can simplify this code and eliminate this function by passing a spacing of 0 to Validate Mirror
     matchesList = list()
     for rowIndex in range(len(arr) - 1):
         if "".join(arr[rowIndex]) == "".join(arr[rowIndex + 1]):
             matchesList.append(rowIndex)
     return matchesList
 
-def validateMirror(arr, index, spacing) -> bool:
+def validateMirror(arr, index, spacing, acceptableErrors) -> bool:
     minIndex = 0
     maxIndex = len(arr) - 1
     if (index - 1) < minIndex or (index + spacing) > maxIndex: 
         return True
-    if "".join(arr[index - 1]) != "".join(arr[index + spacing]):
+    
+    numRepresentation = abs(int(("".join(arr[index - 1])).replace("#", "0").replace(".", "1")) - int(("".join(arr[index + spacing])).replace("#", "0").replace(".", "1")))
+
+    # print(("".join(arr[index - 1])).replace("#", "0").replace(".", "1"), "-", ("".join(arr[index + spacing])).replace("#", "0").replace(".", "1"), "=", numRepresentation)
+
+    if str(numRepresentation).count("1") > acceptableErrors:
         return False
-    return validateMirror(arr, index - 1, spacing + 2)
+    return validateMirror(arr, index - 1, spacing + 2, acceptableErrors - int(str(numRepresentation).count("1")))
 
 start = datetime.datetime.now()
 
@@ -49,14 +54,14 @@ for pattern in input:
 
     if len(patternDict["columnIndexes"]) > 0:
         for colIndex in patternDict["columnIndexes"]:
-            isMirror = validateMirror(np.transpose(arr), colIndex, 2)
+            isMirror = validateMirror(np.transpose(arr), colIndex, 2, 1)
             if isMirror == True: 
                 output += colIndex + 1
                 break
 
     if (len(patternDict["rowIndexes"]) > 0) and (isMirror != True):
         for rowIndex in patternDict["rowIndexes"]:
-            isMirror = validateMirror(arr, rowIndex, 2)
+            isMirror = validateMirror(arr, rowIndex, 2, 1)
             if isMirror == True: 
                 output += 100*(rowIndex + 1)
                 break
@@ -66,3 +71,5 @@ end = datetime.datetime.now() - start
 print("Time: ", end)
 
 print("Output: ", output)
+
+# 22164 too low
