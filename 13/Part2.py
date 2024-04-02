@@ -38,33 +38,18 @@ start = datetime.datetime.now()
 
 for pattern in input:
     arr = np.array(pattern)
-    patternDict = {
-        "columnIndexes": findDuplicates(np.transpose(arr)),
-        "rowIndexes": findDuplicates(arr) 
-        }
-    if len(patternDict["columnIndexes"]) + len(patternDict["rowIndexes"]) == 1:
-        # find the index, add it to the output and continue
-        if patternDict["columnIndexes"] != []: 
-            output += patternDict["columnIndexes"][0] + 1
-        else:
-            output += 100*(patternDict["rowIndexes"][0] + 1)
-        continue
-    
-    isMirror = False
 
-    if len(patternDict["columnIndexes"]) > 0:
-        for colIndex in patternDict["columnIndexes"]:
-            isMirror = validateMirror(np.transpose(arr), colIndex, 2, 1)
-            if isMirror == True: 
-                output += colIndex + 1
-                break
+    for colIndex in range(len(np.transpose(arr))):
+        isMirror = validateMirror(np.transpose(arr), colIndex, 0, 1)
+        if isMirror == True: 
+            output += colIndex + 1
+            break
 
-    if (len(patternDict["rowIndexes"]) > 0) and (isMirror != True):
-        for rowIndex in patternDict["rowIndexes"]:
-            isMirror = validateMirror(arr, rowIndex, 2, 1)
-            if isMirror == True: 
-                output += 100*(rowIndex + 1)
-                break
+    for rowIndex in range(len(arr)):
+        isMirror = validateMirror(arr, rowIndex, 0, 1)
+        if isMirror == True: 
+            output += 100*(rowIndex + 1)
+            break
 
 
 end = datetime.datetime.now() - start
