@@ -13,44 +13,51 @@ for puzzleIndex in range(len(input)):
 
 output = 0
 
-def findDuplicates(arr, acceptableErrors): # I believe I can simplify this code and eliminate this function by passing a spacing of 0 to Validate Mirror
-    matchesList = list()
-    for rowIndex in range(len(arr) - 1):
-        if "".join(arr[rowIndex]) == "".join(arr[rowIndex + 1]):
-            matchesList.append(rowIndex)
-    return matchesList
-
 def validateMirror(arr, index, spacing, acceptableErrors) -> bool:
     minIndex = 0
     maxIndex = len(arr) - 1
-    if (index - 1) < minIndex or (index + spacing) > maxIndex: 
-        return True
-    
-    numRepresentation = abs(int(("".join(arr[index - 1])).replace("#", "0").replace(".", "1")) - int(("".join(arr[index + spacing])).replace("#", "0").replace(".", "1")))
-
-    # print(("".join(arr[index - 1])).replace("#", "0").replace(".", "1"), "-", ("".join(arr[index + spacing])).replace("#", "0").replace(".", "1"), "=", numRepresentation)
-
-    if str(numRepresentation).count("1") > acceptableErrors:
+    if (index < minIndex) or ((index + spacing + 1) > maxIndex): 
+        if acceptableErrors == 0:
+            return True
         return False
-    return validateMirror(arr, index - 1, spacing + 2, acceptableErrors - int(str(numRepresentation).count("1")))
+    
+    firstNum = int(("".join(arr[index])).replace("#", "0").replace(".", "1"))
+    secondNum = int(("".join(arr[index + spacing + 1])).replace("#", "0").replace(".", "1"))
+    numRepresentation = str(abs(firstNum - secondNum)).replace("0", "")
+
+    if numRepresentation == '': numRepresentation = 0
+    else: numRepresentation = int(numRepresentation)
+
+    # print(spacing, ":", firstNum, "-", secondNum, "=", numRepresentation)
+
+    if numRepresentation > acceptableErrors:
+        return False
+    return validateMirror(arr, index - 1, spacing + 2, acceptableErrors - numRepresentation)
 
 start = datetime.datetime.now()
 
 for pattern in input:
     arr = np.array(pattern)
 
-    for colIndex in range(len(np.transpose(arr))):
-        isMirror = validateMirror(np.transpose(arr), colIndex, 0, 1)
-        if isMirror == True: 
-            output += colIndex + 1
-            break
+    breakFlag = True
 
-    for rowIndex in range(len(arr)):
-        isMirror = validateMirror(arr, rowIndex, 0, 1)
+    for colIndex in range(len(arr)):
+        isMirror = validateMirror(arr, colIndex, 0, 1)
+        print(colIndex, ":", isMirror)
         if isMirror == True: 
-            output += 100*(rowIndex + 1)
+            output += (colIndex + 1)*100
             break
+    else: breakFlag = False
 
+    if breakFlag == True: 
+        print("Breaking...")
+        continue
+
+    for rowIndex in range(len(np.transpose(arr))):
+        isMirror = validateMirror(np.transpose(arr), rowIndex, 0, 1)
+        if isMirror == True: 
+            output += (rowIndex + 1)*1
+            break
 
 end = datetime.datetime.now() - start
 print("Time: ", end)
@@ -58,3 +65,5 @@ print("Time: ", end)
 print("Output: ", output)
 
 # 22164 too low
+# 73500 too high
+# has to be less than 32723 original answer to part 1?
