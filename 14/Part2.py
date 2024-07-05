@@ -1,9 +1,11 @@
 import datetime
 from pprint import pprint 
 
-inputFile = "input2.txt"
+inputFile = "input.txt"
+outputFile = "output.txt"
 
 f = open(inputFile, "r")
+of = open(outputFile, "w")
 
 mirror = f.read().split("\n")
 
@@ -97,10 +99,14 @@ for x in range(1000000000):
         rowLoad = antiIndex*rockCount
         # print(rowIndex, antiIndex, rockCount, rowLoad, output)
         output += rowLoad
-    print(output)
+    print( "\r" + str(x) + ": " +str(output), end="")
+    of.write(str(output) + "\n")
 
 end = datetime.datetime.now() - start
 print("Time: ", end)
 
 print("Output: ", output)
 
+# 96060 too high
+# 95769 too high
+# 95736 correct!
