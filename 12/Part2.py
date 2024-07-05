@@ -63,4 +63,5 @@ for y in range(1, 50):
 
     end = datetime.datetime.now() - start
     print("Time: ", end)
+    print("Time: ", end*4*1000000000)
     print("Output: ", y, ":", output)
