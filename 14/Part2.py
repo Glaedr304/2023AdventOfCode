@@ -1,5 +1,4 @@
 import datetime
-import numpy as np
 from pprint import pprint 
 
 inputFile = "input2.txt"
@@ -12,8 +11,6 @@ mirror = f.read().split("\n")
 
 rowCount = len(mirror)
 colCount = len(mirror[0])
-
-output = 0
 
 def moveARockNorth(rowIndex: int, colIndex: int) -> None: # Modifies mirror
     for step in range(rowCount - rowIndex):
@@ -37,11 +34,11 @@ def moveARockEast(rowIndex: int, colIndex: int) -> None: # Modifies mirror
         else:
             continue
 
-def moveARockSouth(rowIndex: int, colIndex: int) -> None: # Modifies mirror6
+def moveARockSouth(rowIndex: int, colIndex: int) -> None: # Modifies mirror
     for step in range(rowIndex + 1):
-        if  mirror[rowIndex][colIndex - step] == "O":
-            mirror[rowIndex] = mirror[rowIndex - step][:colIndex] + "." + mirror[rowIndex - step][colIndex + 1:]
-            mirror[rowIndex] = mirror[rowIndex       ][:colIndex] + "O" + mirror[rowIndex       ][colIndex + 1:]
+        if  mirror[rowIndex - step][colIndex] == "O":
+            mirror[rowIndex - step] = mirror[rowIndex - step][:colIndex] + "." + mirror[rowIndex - step][colIndex + 1:]
+            mirror[rowIndex       ] = mirror[rowIndex       ][:colIndex] + "O" + mirror[rowIndex       ][colIndex + 1:]
             break
         elif mirror[rowIndex - step][colIndex] == "#":
             break
@@ -61,38 +58,46 @@ def moveARockWest(rowIndex: int, colIndex: int) -> None: # Modifies mirror
 
 start = datetime.datetime.now()
 
-for rowIndex in range(rowCount):
+for x in range(1000000000):
+    output = 0
+
+    for rowIndex in range(rowCount):
+        for colIndex in range(colCount):
+            if mirror[rowIndex][colIndex] == ".":
+                moveARockNorth(rowIndex, colIndex)
+            else:
+                continue
+
     for colIndex in range(colCount):
-        if mirror[rowIndex][colIndex] == ".":
-            moveARockNorth(rowIndex, colIndex)
-        else:
-            continue
+        for rowIndex in range(rowCount):
+            if mirror[rowIndex][colIndex] == ".":
+                moveARockWest(rowIndex, colIndex)
+            else:
+                continue
 
-for colIndex in reversed(range(colCount)):
+    for rowIndex in reversed(range(rowCount)):
+        for colIndex in range(colCount):
+            if mirror[rowIndex][colIndex] == ".":
+                moveARockSouth(rowIndex, colIndex)
+            else:
+                continue
+
+    for colIndex in reversed(range(colCount)):
+        for rowIndex in range(rowCount):
+            if mirror[rowIndex][colIndex] == ".":
+                moveARockEast(rowIndex, colIndex)
+            else:
+                continue
+
+    # pprint(mirror)
+
     for rowIndex in range(rowCount):
-        if mirror[rowIndex][colIndex] == ".":
-            moveARockEast(rowIndex, colIndex)
-        else:
-            continue
-
-
-
-for colIndex in range(colCount):
-    for rowIndex in range(rowCount):
-        if mirror[rowIndex][colIndex] == ".":
-            moveARockWest(rowIndex, colIndex)
-        else:
-            continue
-
-pprint(mirror)
-
-for rowIndex in range(rowCount):
-    antiIndex = rowCount - rowIndex
-    rockCount = mirror[rowIndex].count("O")
-    rowLoad = antiIndex*rockCount
-    # print(rowIndex, antiIndex, rockCount, rowLoad, output)
-    output += rowLoad
-
+        antiIndex = rowCount - rowIndex
+        rockCount = mirror[rowIndex].count("O")
+        rowLoad = antiIndex*rockCount
+        # print(rowIndex, antiIndex, rockCount, rowLoad, output)
+        output += rowLoad
+    print(output)
 
 end = datetime.datetime.now() - start
 print("Time: ", end)
