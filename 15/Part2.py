@@ -45,7 +45,6 @@ for itemIndex in range(len(listToHash)):
 
     hashedList.append(thisDict)
 
-
 for instruction in hashedList:
     thisHash = str(instruction["hash"])
     thisOperator = str(instruction["operator"])
@@ -75,8 +74,9 @@ for instruction in hashedList:
 for box in hashmap:
     boxIndex = eval(box)
     for slotIndex in range(len( hashmap[box] )):
-        output += (boxIndex + 1)*(slotIndex + 1)*int(hashmap[box][slotIndex][hashmap[box][slotIndex].find(" ") + 1:])
-pprint(hashmap)
+        output += (boxIndex + 1)*(slotIndex + 1)*int(hashmap[box][slotIndex][-1])
+
+# pprint(hashmap)
 end = datetime.datetime.now() - start
 print("Time: ", end)
 
