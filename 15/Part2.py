@@ -1,4 +1,5 @@
 import datetime
+from pprint import pprint 
 
 inputFile = "input.txt"
 
@@ -75,7 +76,7 @@ for box in hashmap:
     boxIndex = eval(box)
     for slotIndex in range(len( hashmap[box] )):
         output += (boxIndex + 1)*(slotIndex + 1)*int(hashmap[box][slotIndex][hashmap[box][slotIndex].find(" ") + 1:])
-
+pprint(hashmap)
 end = datetime.datetime.now() - start
 print("Time: ", end)
 
