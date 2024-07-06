@@ -18,7 +18,7 @@ start = datetime.datetime.now()
 hashmap = dict()
 
 for x in range(256):
-    hashmap[str(x)] = list()
+    hashmap[str(x)] = dict()
 
 for itemIndex in range(len(listToHash)):
 
@@ -52,29 +52,24 @@ for instruction in hashedList:
     thisLense = str(instruction["lense"])
 
     if thisOperator == "=":
-        Index = 0
-        for item in hashmap[thisHash]:
-            if item.find(thisLabel) != -1:
-                hashmap[thisHash][Index] = thisLabel + " " + thisLense
-                break
-            Index += 1
-        else:
-            hashmap[thisHash].append(thisLabel + " " + thisLense)
+        hashmap[thisHash][thisLabel] = thisLense
 
     elif thisOperator == "-":
-        Index = 0
-        for item in hashmap[thisHash]:
-            if item.find(thisLabel) != -1:
-                hashmap[thisHash].pop(Index)
-                break
-            Index += 1
+        try:
+            hashmap[thisHash].pop(thisLabel)
+        except:
+            pass
     else:
         print("How the fuck did I get here??")
 
 for box in hashmap:
     boxIndex = eval(box)
-    for slotIndex in range(len( hashmap[box] )):
-        output += (boxIndex + 1)*(slotIndex + 1)*int(hashmap[box][slotIndex][-1])
+    slotIndex = 1
+    for slot in hashmap[box]:
+        print(slot)
+        print(type(hashmap[box][slot]))
+        output += (boxIndex + 1)*(slotIndex)*int(hashmap[box][slot])
+        slotIndex += 1
 
 # pprint(hashmap)
 end = datetime.datetime.now() - start
@@ -83,3 +78,5 @@ print("Time: ", end)
 print("Output: ", output)
 
 # 244845 too low
+# 413307 too high
+# 245223 just right!
