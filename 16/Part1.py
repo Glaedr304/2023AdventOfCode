@@ -108,4 +108,5 @@ print("Time: ", end)
 
 print("Output: ", output)
 
+# 7067 Correct! First try :3
 # This works but its stupid, i basically waited until the output was steady, not until the script ended, it would never end.
