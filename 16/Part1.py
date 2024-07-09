@@ -9,6 +9,8 @@ f = open(inputFile, "r")
 
 mirrorMap = f.read().split("\n")
 
+pprint(mirrorMap)
+
 energizerMap = list()
 for index in range(len(mirrorMap)*len(mirrorMap[0])):
     energizerMap.append(".")
@@ -25,26 +27,30 @@ beamStack = [
         Beam(-1, 0, "E")
     ]
 
-def moveBeam(Dir: str) -> None: 
-    if   Dir == "N":
+def moveBeam() -> None: 
+    if   beamStack[0].Dir == "N":
         beamStack[0].y -= 1     
-    elif Dir == "E":
+    elif beamStack[0].Dir == "E":
         beamStack[0].x += 1 
-    elif Dir == "S":
+    elif beamStack[0].Dir == "S":
         beamStack[0].y += 1 
-    elif Dir == "W":
+    elif beamStack[0].Dir == "W":
         beamStack[0].x -= 1 
     else:
         print("fuck, how did you get here?")
     
+    # print("\r", beamStack[0].x, beamStack[0].y, end = "")
     if beamStack[0].x < 0 or beamStack[0].y < 0 or beamStack[0].x >= len(mirrorMap[0]) or beamStack[0].y >= len(mirrorMap):
+        beamStack.pop(0)
         return None
-    energize(beamStack[0].x, beamStack[0].y)
+    else:
+        energize(beamStack[0].x, beamStack[0].y)
 
-    thisChar = mirrorMap[beamStack[0].x][beamStack[0].y]
+    thisChar = mirrorMap[beamStack[0].y][beamStack[0].x]
+    print("This character is", thisChar, "at", beamStack[0].x, beamStack[0].y)
 
     if thisChar == ".":
-        moveBeam(Dir)
+        moveBeam()
     elif thisChar == "/" or thisChar == "\\":
         newBeamDir = {
             "/": {
@@ -60,8 +66,10 @@ def moveBeam(Dir: str) -> None:
                 "S":"E"
             }
         }
-        beamStack.append(Beam(beamStack[0].x, beamStack[0].y, newBeamDir[thisChar][Dir])) 
-
+        print("Before:", beamStack[0].x, ":", beamStack[0].y, ",", beamStack[0].Dir)
+        beamStack[0].Dir = newBeamDir[thisChar][beamStack[0].Dir]
+        print("After:", beamStack[0].x, ":", beamStack[0].y, ",", beamStack[0].Dir)
+        moveBeam()
     elif thisChar == "|" or thisChar == "-":
         newBeamDir = {
             "|": {
@@ -77,19 +85,27 @@ def moveBeam(Dir: str) -> None:
                 "S":["E", "W"]
             }
         }
-        for newDir in newBeamDir[thisChar]:
-            beamStack.append(Beam(beamStack[0].x, beamStack[0].y, newDir))
+        print("Before:", beamStack[0].x, ":", beamStack[0].y, ",", beamStack[0].Dir)
+        if len(newBeamDir[thisChar]) == 1:
+            moveBeam()
+        else:
+            for newDir in newBeamDir[thisChar]:
+                beamStack.append(Beam(beamStack[0].x, beamStack[0].y, newDir))
+                beamStack.pop(0)
     else:
         print("I shouldnt be here.")
 
 def energize(xPos: int, yPos: int) -> None:
+    print("Energizing!")
     energizerMap[yPos*len(mirrorMap) + xPos] = "#"
 
 start = datetime.datetime.now()
 
 while len(beamStack) != 0:
 # for beam in beamStack:
-    moveBeam(beamStack[0].Dir)
+    print("This Beam:", beamStack[0].x, beamStack[0].y, beamStack[0].Dir)
+    moveBeam()
+    # print("\r", beamStack[0].x, beamStack[0].y, len(beamStack), end="")
 
 output = energizerMap.count("#")
 
